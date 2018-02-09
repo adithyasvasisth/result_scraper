@@ -43,11 +43,11 @@ with open('test.txt', 'w+') as f:
 
         # IF condition to concatenate USN
         if i < 10:
-            usn = '4SU' + year + branch + '00' + str(i)
+            usn = '1BY' + year + branch + '00' + str(i)
         elif i < 100:
-            usn = '4SU' + year + branch + '0' + str(i)
+            usn = '1BY' + year + branch + '0' + str(i)
         else:
-            usn = '4SU' + year + branch + str(i)
+            usn = '1BY' + year + branch + str(i)
 
         # opens the vtu result login page, gets the usn and opens the result page
         br = RoboBrowser()
@@ -70,8 +70,7 @@ with open('test.txt', 'w+') as f:
             print("INVALID USN/ INCOMPATIBLE DATA")
 
         # IF condition to check invalid page opener
-        if tds[
-            0].text != 'University Seat Number ' or sem != semc:  # To check for Diploma and Number of students : (len(tds) < ch or len(ths) < 6)
+        if tds[0].text != 'University Seat Number ' or sem != semc:  # To check for Diploma and Number of students : (len(tds) < ch or len(ths) < 6)
             print("INVALID USN/ INCOMPATIBLE DATA")
             continue
         record = ''
@@ -88,6 +87,7 @@ with open('test.txt', 'w+') as f:
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6, you get final marks of each subject
         for j in range(10, 52, 6):
             # Checks if string has number
+            #for j in range(l, l+3, 1):
             if num_there(divCell[j]):
                 record = record + '\t' + divCell[j].text
                 print(divCell[j].text, end='\t\t')
@@ -100,44 +100,44 @@ with open('test.txt', 'w+') as f:
 
         # Loop to read data from file and converting marks to int and calculating highest in each subject
 
-    f.seek(0)
-    spn = [0, 0, 0, 0, 0, 0, 0, 0]
-    sn = [0, 0, 0, 0, 0, 0, 0, 0]
-    maxmks = [0, 0, 0, 0, 0, 0, 0, 0]
-    maxmksusn = ['', '', '', '', '', '', '', '']
-    k = 0
-    for i in range(low, high):
-        record = f.readline()
-        usn = record[0:10]
-        record = record[11:]
-        for j in range(0, 8):
-            mark = ''
-            k = 0
-            if record == '':
-                break
-            while k < len(record):
-                mark = mark + record[k]
-                k = k + 1
-                if (record[k] == '\n' or record[k] == '\t'):
-                    break
-            record = record[(k + 1):]
-            if (maxmks[j] < int(mark)):
-                # print(mark)
-                maxmks[j] = int(mark)
-                maxmksusn[j] = usn
-            if (int(mark) >= 90):
-                spn[j] += 1
-            elif (int(mark) >= 80):
-                sn[j] += 1
-
-    for i in range(0, 8):
-        print('The student with max marks in ' + subj[i] + ' is ' + maxmksusn[i] + ' with marks ' + str(maxmks[i]))
-        print('')
-        if i > 6:
-            continue
-        print('Number of S+ students: ' + str(spn[i]))
-        print('Number of S students: ' + str(sn[i]))
-        print('\n')
+    # f.seek(0)
+    # spn = [0, 0, 0, 0, 0, 0, 0, 0]
+    # sn = [0, 0, 0, 0, 0, 0, 0, 0]
+    # maxmks = [0, 0, 0, 0, 0, 0, 0, 0]
+    # maxmksusn = ['', '', '', '', '', '', '', '']
+    # k = 0
+    # for i in range(low, high):
+    #     record = f.readline()
+    #     usn = record[0:10]
+    #     record = record[11:]
+    #     for j in range(0, 8):
+    #         mark = ''
+    #         k = 0
+    #         if record == '':
+    #             break
+    #         while k < len(record):
+    #             mark = mark + record[k]
+    #             k = k + 1
+    #             if (record[k] == '\n' or record[k] == '\t'):
+    #                 break
+    #         record = record[(k + 1):]
+    #         if (maxmks[j] < int(mark)):
+    #             # print(mark)
+    #             maxmks[j] = int(mark)
+    #             maxmksusn[j] = usn
+    #         if (int(mark) >= 90):
+    #             spn[j] += 1
+    #         elif (int(mark) >= 80):
+    #             sn[j] += 1
+    #
+    # for i in range(0, 8):
+    #     print('The student with max marks in ' + subj[i] + ' is ' + maxmksusn[i] + ' with marks ' + str(maxmks[i]))
+    #     print('')
+    #     if i > 6:
+    #         continue
+    #     print('Number of S+ students: ' + str(spn[i]))
+    #     print('Number of S students: ' + str(sn[i]))
+    #     print('\n')
 
 import xlwt
 import xlrd
@@ -149,7 +149,8 @@ f = open('test.txt', 'r+')
 
 data = f.readlines()  # read all lines at once
 for i in range(len(data)):
-    row = data[i].split()  # This will return a line of string data, you may need to convert to other formats depending on your use case
+    row = data[
+        i].split()  # This will return a line of string data, you may need to convert to other formats depending on your use case
 
     for j in range(len(row)):
         ws.write(i, j, row[j])  # Write to cell i, j
