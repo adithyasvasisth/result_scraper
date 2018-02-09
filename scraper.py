@@ -12,7 +12,7 @@ def num_there(s):
 
 
 # List of Subjects
-subj = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+subj = ['1', '2', '3', '4', '5', '6', '7', '8']
 ch = 0
 
 # Input for Branch and USNs
