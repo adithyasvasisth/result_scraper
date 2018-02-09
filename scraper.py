@@ -101,16 +101,16 @@ with open('test.txt', 'w+') as f:
         # Loop to read data from file and converting marks to int and calculating highest in each subject
 
     f.seek(0)
-    spn = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    sn = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    maxmks = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    maxmksusn = ['', '', '', '', '', '', '', '', '']
+    spn = [0, 0, 0, 0, 0, 0, 0, 0]
+    sn = [0, 0, 0, 0, 0, 0, 0, 0]
+    maxmks = [0, 0, 0, 0, 0, 0, 0, 0]
+    maxmksusn = ['', '', '', '', '', '', '', '']
     k = 0
     for i in range(low, high):
         record = f.readline()
         usn = record[0:10]
         record = record[11:]
-        for j in range(0, 9):
+        for j in range(0, 8):
             mark = ''
             k = 0
             if record == '':
@@ -130,7 +130,7 @@ with open('test.txt', 'w+') as f:
             elif (int(mark) >= 80):
                 sn[j] += 1
 
-    for i in range(0, 9):
+    for i in range(0, 8):
         print('The student with max marks in ' + subj[i] + ' is ' + maxmksusn[i] + ' with marks ' + str(maxmks[i]))
         print('')
         if i > 6:
@@ -149,8 +149,7 @@ f = open('test.txt', 'r+')
 
 data = f.readlines()  # read all lines at once
 for i in range(len(data)):
-    row = data[
-        i].split()  # This will return a line of string data, you may need to convert to other formats depending on your use case
+    row = data[i].split()  # This will return a line of string data, you may need to convert to other formats depending on your use case
 
     for j in range(len(row)):
         ws.write(i, j, row[j])  # Write to cell i, j
