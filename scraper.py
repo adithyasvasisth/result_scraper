@@ -16,17 +16,14 @@ subj = ['1', '2', '3', '4', '5', '6', '7', '8']
 ch = 0
 
 # Input for Branch and USNs
-print('Please enter the branch')
-branch = input()
-print('Enter starting USN')
-low = int(input())
-print('Enter last USN')
+
+college = input("Enter the college code\n")
+year = input('Enter the year\n')
+branch = input('Please enter the branch\n')
+low = int(input('Enter starting USN\n'))
 # increment last USN to aid looping
-high = int(input()) + 1
-print('Enter the year')
-year = input()
-print('Enter the Semester')
-semc = input()
+high = int(input('Enter last USN\n')) + 1
+semc = input('Enter the Semester\n')
 # print('Diploma student?(y/n)')
 # dpl = input()
 # if (dpl == 'y'):
@@ -38,16 +35,18 @@ semc = input()
 with open('test.txt', 'w+') as f:
     # print("   USN\t\t15MAT21\t\t15CHE22\t\t15PCD23\t\t15CED24\t\t15ELN25\t\t15CPL26\t\t15CHEL27\t15CIV28\n")
 
+    c = 0
+
     # For Loop to loop through all USNs
     for i in range(low, high):
 
         # IF condition to concatenate USN
         if i < 10:
-            usn = '1BY' + year + branch + '00' + str(i)
+            usn = '1' + college + year + branch + '00' + str(i)
         elif i < 100:
-            usn = '1BY' + year + branch + '0' + str(i)
+            usn = '1' + college + year + branch + '0' + str(i)
         else:
-            usn = '1BY' + year + branch + str(i)
+            usn = '1' + college + year + branch + str(i)
 
         # opens the vtu result login page, gets the usn and opens the result page
         br = RoboBrowser()
@@ -75,6 +74,14 @@ with open('test.txt', 'w+') as f:
             continue
         record = ''
 
+        if c == 0:
+            c += 1
+            record = ""
+            record += "\t\t"
+            for i in range(6, 46, 6):
+                record = record + divCell[i].text + "\t\t"
+            record += "\n"
+
         # print (ths[0].text)
         # tds[1] holds USN number
         record = record + tds[1].text
@@ -87,13 +94,13 @@ with open('test.txt', 'w+') as f:
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6, you get final marks of each subject
         for j in range(10, 52, 6):
             # Checks if string has number
-            #for j in range(l, l+3, 1):
+            # for j in range(l, l+3, 1):
             if num_there(divCell[j]):
                 record = record + '\t' + divCell[j].text
                 print(divCell[j].text, end='\t\t')
             else:
                 break
-        print('')
+            print('')
 
         # Writes the record into the file
         f.write(record + '\n')
