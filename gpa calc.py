@@ -42,7 +42,7 @@ def gpa():
         sub.append(int(input("Subject %d marks ? " % i)))
     for i in range(count1 + 1, count2 + count1 + 1):
         sub.append(int(input("Subject %d marks ? " % i)))
-    sgpa = calc(sub, count1, count2)
-    print("\n--------------------------\nThe SGPA is : %f\n--------------------------\n" % sgpa)
+    sgpa = str(round(calc(sub, count1, count2), 2))
+    print("\n--------------------\n The SGPA is : " + sgpa + "\n--------------------\n")
 
 gpa()
