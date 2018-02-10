@@ -84,7 +84,7 @@ with open('test.txt', 'w+') as f:
 
         # print (ths[0].text)
         # tds[1] holds USN number
-        record = record + tds[1].text
+        record += tds[1].text
 
         # Strips extra garbage from the retrieved USN text
         record = record.strip(' : ')
