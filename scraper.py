@@ -70,7 +70,8 @@ with open('test.txt', 'w+') as f:
             print("INVALID USN/ INCOMPATIBLE DATA")
 
         # IF condition to check invalid page opener
-        if tds[0].text != 'University Seat Number ' or sem != semc:  # To check for Diploma and Number of students : (len(tds) < ch or len(ths) < 6)
+        if tds[
+            0].text != 'University Seat Number ' or sem != semc:  # To check for Diploma and Number of students : (len(tds) < ch or len(ths) < 6)
             print("INVALID USN/ INCOMPATIBLE DATA")
             continue
         record = ''
@@ -78,14 +79,18 @@ with open('test.txt', 'w+') as f:
         if c == 0:
             c += 1
             record = " "
-            record += "\t\t"
+            record += "\t\t\t\t\t\t\t"
             for i in range(6, 46, 6):
-                record = record + divCell[i].text + "\t\t"
+                record = record + divCell[i].text + ",\t\t"
             record += "\n"
 
         # print (ths[0].text)
         # tds[1] holds USN number
         record += re.sub('[!@#$:]', '', tds[1].text)
+        record += ','
+        # tds[3] holds the name
+        record += re.sub('[!@#$:]', '', tds[3].text)
+        record += ','
 
         # Strips extra garbage from the retrieved USN text
 
@@ -94,16 +99,13 @@ with open('test.txt', 'w+') as f:
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6, you get final marks of each subject
         for l in range(8, 50, 6):
             # Checks if string has number
-            for j in range(l, l + 3, 1):
-                if num_there(divCell[j]):
-                    record = record + '\t' + divCell[j].text
-                    print(divCell[j].text, end='\t\t')
-                else:
-                    break
-                print('')
+            for j in range(l, l + 4):
+                record = record + '\t' + divCell[j].text + ','
+                print(divCell[j].text, end='\t\t')
 
         # Writes the record into the file
         f.write(record + '\n')
+        print('\n')
 
         # Loop to read data from file and converting marks to int and calculating highest in each subject
 
@@ -149,29 +151,29 @@ with open('test.txt', 'w+') as f:
 import xlwt
 
 book = xlwt.Workbook()
-ws = book.add_sheet('First Sheet')  # Add a sheet
+ws = book.add_sheet('Sheet1')  # Add a sheet
 
 f = open('test.txt', 'r+')
 
 alignment = xlwt.Alignment()  # Create Alignment
+font = xlwt.Font()  # Create the Font
 alignment.horz = xlwt.Alignment.HORZ_CENTER
+font.bold = True
 style = xlwt.XFStyle()  # Create Style
-style.alignment = alignment  # Add Alignment to Style
+# style.alignment = alignment  # Add Alignment to Style
 
 data = f.readlines()  # read all lines at once
 for i in range(len(data)):
-    row = data[i].split()
+    row = data[i].split(',')
     # This will return a line of string data, you may need to convert to other formats depending on your use case
     if i == 0:
-        k = 0
+        k = 1
         for j in range(len(row)):
-            ws.write_merge(i, i, k + 1, k + 3, row[j], style)
-            k += 3
+            ws.write_merge(i, i, k + 1, k + 4, row[j], style)
+            k += 4
     else:
         for j in range(len(row)):
             ws.write(i, j, row[j], style)  # Write to cell i, j
 
-book.save('Excelfile' + '.xlsx')
+book.save('1' + college + year + branch + '.xlsx')
 f.close()
-
-input()
