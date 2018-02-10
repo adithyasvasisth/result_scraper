@@ -1,4 +1,5 @@
 import sys
+import re
 import warnings
 from robobrowser import RoboBrowser
 from bs4 import BeautifulSoup as soup
@@ -76,7 +77,7 @@ with open('test.txt', 'w+') as f:
 
         if c == 0:
             c += 1
-            record = ""
+            record = " "
             record += "\t\t"
             for i in range(6, 46, 6):
                 record = record + divCell[i].text + "\t\t"
@@ -84,23 +85,22 @@ with open('test.txt', 'w+') as f:
 
         # print (ths[0].text)
         # tds[1] holds USN number
-        record += tds[1].text
+        record += re.sub('[!@#$:]', '', tds[1].text)
 
         # Strips extra garbage from the retrieved USN text
-        record = record.strip(' : ')
 
         print(record, end='\t')
 
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6, you get final marks of each subject
-        for j in range(10, 52, 6):
+        for l in range(8, 50, 6):
             # Checks if string has number
-            # for j in range(l, l+3, 1):
-            if num_there(divCell[j]):
-                record = record + '\t' + divCell[j].text
-                print(divCell[j].text, end='\t\t')
-            else:
-                break
-            print('')
+            for j in range(l, l + 3, 1):
+                if num_there(divCell[j]):
+                    record = record + '\t' + divCell[j].text
+                    print(divCell[j].text, end='\t\t')
+                else:
+                    break
+                print('')
 
         # Writes the record into the file
         f.write(record + '\n')
@@ -147,22 +147,31 @@ with open('test.txt', 'w+') as f:
     #     print('\n')
 
 import xlwt
-import xlrd
 
 book = xlwt.Workbook()
 ws = book.add_sheet('First Sheet')  # Add a sheet
 
 f = open('test.txt', 'r+')
 
+alignment = xlwt.Alignment()  # Create Alignment
+alignment.horz = xlwt.Alignment.HORZ_CENTER
+style = xlwt.XFStyle()  # Create Style
+style.alignment = alignment  # Add Alignment to Style
+
 data = f.readlines()  # read all lines at once
 for i in range(len(data)):
-    row = data[
-        i].split()  # This will return a line of string data, you may need to convert to other formats depending on your use case
+    row = data[i].split()
+    # This will return a line of string data, you may need to convert to other formats depending on your use case
+    if i == 0:
+        k = 0
+        for j in range(len(row)):
+            ws.write_merge(i, i, k + 1, k + 3, row[j], style)
+            k += 3
+    else:
+        for j in range(len(row)):
+            ws.write(i, j, row[j], style)  # Write to cell i, j
 
-    for j in range(len(row)):
-        ws.write(i, j, row[j])  # Write to cell i, j
-
-book.save('Excelfile' + '.xls')
+book.save('Excelfile' + '.xlsx')
 f.close()
 
 input()
