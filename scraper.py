@@ -70,8 +70,7 @@ with open('test.txt', 'w+') as f:
             print("INVALID USN/ INCOMPATIBLE DATA")
 
         # IF condition to check invalid page opener
-        if tds[
-            0].text != 'University Seat Number ' or sem != semc:  # To check for Diploma and Number of students : (len(tds) < ch or len(ths) < 6)
+        if tds[0].text != 'University Seat Number ' or sem != semc:  # To check for Diploma and Number of students
             print("INVALID USN/ INCOMPATIBLE DATA")
             continue
         record = ''
@@ -96,7 +95,7 @@ with open('test.txt', 'w+') as f:
 
         print(record, end='\t')
 
-        # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6, you get final marks of each subject
+        # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6
         for l in range(8, 50, 6):
             # Checks if string has number
             for j in range(l, l + 4):
@@ -168,6 +167,8 @@ for i in range(len(data)):
     # This will return a line of string data, you may need to convert to other formats depending on your use case
     if i == 0:
         k = 1
+        ws.write(i, 0, "USN")
+        ws.write(i, 1, "NAME")
         for j in range(len(row)):
             ws.write_merge(i, i, k + 1, k + 4, row[j], style)
             k += 4
@@ -175,5 +176,11 @@ for i in range(len(data)):
         for j in range(len(row)):
             ws.write(i, j, row[j], style)  # Write to cell i, j
 
-book.save('1' + college + year + branch + '.xlsx')
+pth = 'ExcelFiles/'
+book.save(pth + '1' + college + year + branch + '.xlsx')
+
 f.close()
+
+from sgpa import gpa
+
+gpa(college, year, branch, sem)
