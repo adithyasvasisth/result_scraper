@@ -18,26 +18,27 @@ ch = 0
 
 # Input for Branch and USNs
 
-college = input("Enter the college code\n")
+college = input("Enter the college code\n").upper()
 year = input('Enter the year\n')
-branch = input('Please enter the branch\n')
+branch = input('Please enter the branch\n').upper()
 low = int(input('Enter starting USN\n'))
 # increment last USN to aid looping
 high = int(input('Enter last USN\n')) + 1
 semc = input('Enter the Semester\n')
-# print('Diploma student?(y/n)')
-# dpl = input()
-# if (dpl == 'y'):
-#     ch = 57
-# else:
-#     ch = 51
+cycle = input('Enter the Cycle\n').upper()
+if semc == '1' and cycle == 'P':
+    subcode = 46
+    markscode = 50
+else:
+    subcode = 52
+    markscode = 56
 
 # Opens file for storing data
 with open('test.txt', 'w+') as f:
     # print("   USN\t\t15MAT21\t\t15CHE22\t\t15PCD23\t\t15CED24\t\t15ELN25\t\t15CPL26\t\t15CHEL27\t15CIV28\n")
 
     c = 0
-
+    pf = ''
     # For Loop to loop through all USNs
     for i in range(low, high):
 
@@ -77,10 +78,8 @@ with open('test.txt', 'w+') as f:
 
         if c == 0:
             c += 1
-            record = " "
-            record += "\t\t\t\t\t\t\t"
-            for i in range(6, 46, 6):
-                record = record + divCell[i].text + ",\t\t"
+            for i in range(6, subcode, 6):
+                record = record + divCell[i].text + ","
             record += "\n"
 
         # print (ths[0].text)
@@ -96,12 +95,13 @@ with open('test.txt', 'w+') as f:
         print(record, end='\t')
 
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6
-        for l in range(8, 50, 6):
+        for l in range(8, markscode, 6):
             # Checks if string has number
             for j in range(l, l + 4):
-                record = record + '\t' + divCell[j].text + ','
+                record = record + divCell[j].text + ','
                 print(divCell[j].text, end='\t\t')
-
+                if j == l + 3:
+                    pf = pf + divCell[j].text + ','
         # Writes the record into the file
         f.write(record + '\n')
         print('\n')
@@ -183,4 +183,8 @@ f.close()
 
 from sgpa import gpa
 
-gpa(college, year, branch, sem)
+gpa(college, year, branch, sem, cycle)
+
+# from subj import subres
+
+# subres(college, year, branch, sem, pf)
