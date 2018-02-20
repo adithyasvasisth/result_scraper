@@ -1,15 +1,15 @@
 # coding=utf-8
 
 def grade(m):
-    if m >= 91:
+    if m >= 90:
         return 10
-    elif m >= 81:
+    elif m >= 80:
         return 9
-    elif m >= 71:
+    elif m >= 70:
         return 8
-    elif m >= 61:
+    elif m >= 60:
         return 7
-    elif m >= 51:
+    elif m >= 50:
         return 6
     elif m >= 45:
         return 5

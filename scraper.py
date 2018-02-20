@@ -22,16 +22,24 @@ college = input("Enter the college code\n").upper()
 year = input('Enter the year\n')
 branch = input('Please enter the branch\n').upper()
 low = int(input('Enter starting USN\n'))
+if low >= 400:
+    dip = 'Y'
+else:
+    dip = 'N'
 # increment last USN to aid looping
 high = int(input('Enter last USN\n')) + 1
 semc = input('Enter the Semester\n')
-cycle = input('Enter the Cycle\n').upper()
-if semc == '1' and cycle == 'P':
-    subcode = 46
-    markscode = 50
-else:
+if dip == 'N':
     subcode = 52
     markscode = 56
+elif semc == '1':
+    cycle = input('Enter the Cycle\n').upper()
+    if cycle == 'P':
+        subcode = 46
+        markscode = 50
+else:
+    subcode = 58
+    markscode = 62
 
 # Opens file for storing data
 with open('test.txt', 'w+') as f:
@@ -51,8 +59,11 @@ with open('test.txt', 'w+') as f:
             usn = '1' + college + year + branch + str(i)
 
         # opens the vtu result login page, gets the usn and opens the result page
+        url = "http://results.vtu.ac.in/vitaviresultcbcs/index.php"
+        if semc == '7':
+            url = "http://results.vtu.ac.in/vitaviresultnoncbcs/index.php"
         br = RoboBrowser()
-        br.open("http://results.vtu.ac.in/vitaviresultcbcs/index.php")
+        br.open(url)
         form = br.get_form()
         form['usn'].value = usn
         br.submit_form(form)
@@ -81,7 +92,6 @@ with open('test.txt', 'w+') as f:
             for i in range(6, subcode, 6):
                 record = record + divCell[i].text + ","
             record += "\n"
-
         # print (ths[0].text)
         # tds[1] holds USN number
         record += re.sub('[!@#$:]', '', tds[1].text)
@@ -89,20 +99,28 @@ with open('test.txt', 'w+') as f:
         # tds[3] holds the name
         record += re.sub('[!@#$:]', '', tds[3].text)
         record += ','
-
         # Strips extra garbage from the retrieved USN text
-
         print(record, end='\t')
-
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6
         for l in range(8, markscode, 6):
             # Checks if string has number
             for j in range(l, l + 4):
-                record = record + divCell[j].text + ','
+                char = divCell[j].text
+                if char.isdigit():
+                    record = record + str(int(char)) + ','
+                else:
+                    record = record + char + ','
                 print(divCell[j].text, end='\t\t')
                 if j == l + 3:
                     pf = pf + divCell[j].text + ','
         # Writes the record into the file
+        if semc == '7':
+            record += re.sub('[!@#$:]', '', tds[5].text)
+            print(re.sub('[!@#$:]', '', tds[5].text), end='\t\t')
+            record += ','
+            record += re.sub('[!@#$:]', '', tds[7].text)
+            print(re.sub('[!@#$:]', '', tds[7].text), end='\t\t')
+            record += ','
         f.write(record + '\n')
         print('\n')
 
@@ -172,18 +190,28 @@ for i in range(len(data)):
         for j in range(len(row)):
             ws.write_merge(i, i, k + 1, k + 4, row[j], style)
             k += 4
+            if semc == '7' and k == 33:
+                ws.write(i, k + 1, "TOTAL MARKS")
+                ws.write(i, k + 2, "RESULT")
+                break
     else:
         for j in range(len(row)):
-            ws.write(i, j, row[j], style)  # Write to cell i, j
+            if row[j].isdigit():
+                ws.write(i, j, int(row[j]), style)  # Write to cell i, j
+            else:
+                ws.write(i, j, row[j], style)
 
 pth = 'ExcelFiles/'
 book.save(pth + '1' + college + year + branch + '.xlsx')
 
 f.close()
 
-from sgpa import gpa
+if semc != '7' and dip != 'Y':
+    if semc != '1':
+        cycle = 'N'
+    from sgpa import gpa
 
-gpa(college, year, branch, sem, cycle)
+    gpa(college, year, branch, sem, cycle)
 
 # from subj import subres
 

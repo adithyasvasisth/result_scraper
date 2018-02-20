@@ -77,15 +77,18 @@ def gpa(college, year, branch, sem, cycle):
         f.write('\n')
         for i in range(1, sheet.nrows):
             record = ''
+            string = ''
             record += sheet.cell_value(i, 0) + ',' + sheet.cell_value(i, 1) + ','
             for j in range(4, marks_code, 4):
-                if sheet.cell_value(i, j + 1) == 'P':
+                if int(sem) == 1 and cycle == 'C' and j == 32:
+                    string = sheet.cell_value(i, j + 1)
+                elif sheet.cell_value(i, j + 1) == 'P':
                     sub.append(int(sheet.cell_value(i, j)))
                 else:
                     sub.append(0)
             record, sgpa = calc(sub, count1, count2, record)
             percent = str((float(sgpa) - 0.750) * 10)
-            record += sgpa + ',' + percent + ','
+            record += sgpa + ',' + percent + ','  # record += string + ',' + sgpa + ',' + percent + ','  for Environmental
             print(record, end='\t')
             print('\n')
             f.write(record + '\n')
