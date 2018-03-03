@@ -33,17 +33,16 @@ high = int(input('Enter last USN\n')) + 1
 semc = input('Enter the Semester\n')
 
 subcode = 52
-markscode = 56
+iloop = 8
 
 if semc == '1':
     cycle = input('Enter the Cycle\n').upper()
     if cycle == 'P':
+        iloop = 7
         subcode = 46
-        markscode = 50
-
-if semc == '3' and dip == 'Y':
+if (semc == '3' or '4') and dip == 'Y':
+    iloop = 9
     subcode = 58
-    markscode = 62
 
 # Opens file for storing data
 with open('test.txt', 'w+') as f:
@@ -52,15 +51,15 @@ with open('test.txt', 'w+') as f:
     c = 0
     pf = ''
     # For Loop to loop through all USNs
-    for i in range(low, high):
+    for u in range(low, high):
 
         # IF condition to concatenate USN
-        if i < 10:
-            usn = '1' + college + year + branch + '00' + str(i)
-        elif i < 100:
-            usn = '1' + college + year + branch + '0' + str(i)
+        if u < 10:
+            usn = '1' + college + year + branch + '00' + str(u)
+        elif u < 100:
+            usn = '1' + college + year + branch + '0' + str(u)
         else:
-            usn = '1' + college + year + branch + str(i)
+            usn = '1' + college + year + branch + str(u)
 
         # opens the vtu result login page, gets the usn and opens the result page
         url = "http://results.vtu.ac.in/vitaviresultcbcs/index.php"
@@ -69,7 +68,7 @@ with open('test.txt', 'w+') as f:
         br = RoboBrowser()
         br.open(url)
         form = br.get_form()
-        form['sln'].value = usn
+        form['lns'].value = usn
         br.submit_form(form)
         soup = br.parsed
 
@@ -90,15 +89,13 @@ with open('test.txt', 'w+') as f:
             print("INVALID USN/ INCOMPATIBLE DATA")
             continue
         record = ''
-        sublist = ''
 
-        if c == 0:
-            c += 1
-            for i in range(6, subcode, 6):
-                sublist += divCell[i].text + " ,"
-                record = record + divCell[i].text + ","
-            record += "\n"
-            print(sublist)
+        # if c == 0:
+        #     c += 1
+        #     for i in range(6, subcode, 6):
+        #         # sublist += divCell[i].text + " ,"
+        #         record = record + divCell[i].text + ","
+        #     record += "\n"
 
         # tds[1] holds USN number
         record += re.sub('[!@#$:]', '', tds[1].text)
@@ -106,21 +103,47 @@ with open('test.txt', 'w+') as f:
         # tds[3] holds the name
         record += re.sub('[!@#$:]', '', tds[3].text)
         record += ','
+
+        sortList1 = []
+        for i in range(6, subcode, 6):
+            if (divCell[i].text[-3:]).isdigit():
+                sortList1.append(divCell[i].text[-3:])
+            else:
+                sortList1.append(divCell[i].text[-2:])
+        sortList1.sort()
+
+        # for i in range(0,8):
+        #     for j in range(6, subcode, 6):
+        #
+
+        ilist = []
+        for i in range(0, iloop):
+            for j in range(6, subcode, 6):
+                if (divCell[j].text[-3:]).isdigit():
+                    if divCell[j].text[-3:] == sortList1[i] and j not in ilist:
+                        ilist.append(j)
+                else:
+                    if divCell[j].text[-2:] == sortList1[i] and j not in ilist:
+                        ilist.append(j)
+
         # Strips extra garbage from the retrieved USN text
         print(record, end='\t')
         # Loop that goes from 8 to 51 in steps of 6 because starting from 8, in steps of 6
         try:
-            for l in range(8, markscode, 6):
+            for l in ilist:
                 # Checks if string has number
-                for j in range(l, l + 4):
-                    char = divCell[j].text
-                    if char.isdigit():
-                        record = record + str(int(char)) + ','
+                for j in range(l, l + 6):
+                    if j == l + 1:
+                        continue
                     else:
-                        record = record + char + ','
-                    print(divCell[j].text, end='\t\t')
-                    if j == l + 3:
-                        pf = pf + divCell[j].text + ','
+                        char = divCell[j].text
+                        if char.isdigit():
+                            record = record + str(int(char)) + ','
+                        else:
+                            record = record + char + ','
+                        print(divCell[j].text, end='\t\t')
+                        if j == l + 5:
+                            pf = pf + divCell[j].text + ','
             # Writes the record into the file
             if semc == '7':
                 record += re.sub('[!@#$:]', '', tds[5].text)
@@ -154,29 +177,17 @@ data = f.readlines()  # read all lines at once
 for i in range(len(data)):
     row = data[i].split(',')
     # This will return a line of string data, you may need to convert to other formats depending on your use case
-    if i == 0:
-        k = 1
-        ws.write(i, 0, "USN")
-        ws.write(i, 1, "NAME")
-        for j in range(len(row)):
-            ws.write_merge(i, i, k + 1, k + 4, row[j], style)
-            k += 4
-            if semc == '7' and k == 33:
-                ws.write(i, k + 1, "TOTAL MARKS")
-                ws.write(i, k + 2, "RESULT")
-                break
-    else:
-        for j in range(len(row)):
-            if row[j].isdigit():
-                ws.write(i, j, int(row[j]), style)  # Write to cell i, j
-            else:
-                ws.write(i, j, row[j], style)
+    for j in range(len(row)):
+        if row[j].isdigit():
+            ws.write(i, j, int(row[j]), style)  # Write to cell i, j
+        else:
+            ws.write(i, j, row[j], style)
 
 pth = 'ExcelFiles/'
 if dip == 'N':
-    book.save(pth + '1' + college + year + branch + str(low) + '.xlsx')
+    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + '.xlsx')
 else:
-    book.save(pth + '1' + college + year + branch + str(low) + 'DIP.xlsx')
+    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'DIP.xlsx')
 f.close()
 
 if semc != '7' and dip != 'Y':
@@ -184,8 +195,4 @@ if semc != '7' and dip != 'Y':
         cycle = 'N'
     from sgpa import gpa
 
-    gpa(college, year, branch, low, sem, cycle)
-
-# from subj import subres
-
-# subres(college, year, branch, sem, pf)
+    gpa(college, year, branch, low, high, sem, cycle)
