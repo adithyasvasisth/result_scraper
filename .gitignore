@@ -2,3 +2,4 @@
 ExcelFiles/*
 *.txt
 *.iml
+_pycache_/*
