@@ -196,3 +196,4 @@ if semc != '7' and dip != 'Y':
     from sgpa import gpa
 
     gpa(college, year, branch, low, high, sem, cycle)
+

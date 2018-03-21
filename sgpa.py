@@ -125,6 +125,7 @@ def gpa(college, year, branch, low, high, sem, cycle):
     book = xlwt.Workbook()
     ws = book.add_sheet('Sheet1')
     f = open('gpa.txt', 'r+')
+
     data = f.readlines()  # read all lines at once
     for i in range(len(data)):
         row = data[i].split(',')
@@ -133,4 +134,17 @@ def gpa(college, year, branch, low, high, sem, cycle):
 
     book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'GPA.xlsx')
 
+
     f.close()
+
+    #Sorts gpa column from gpa.txt and then written to rank.xlsx
+    import pandas as pd
+    df = pd.read_csv("gpa.txt", sep=",", header=None)
+    try:
+        df = df.sort_values(by=df.columns[-3], ascending=False)
+    except AttributeError:
+        print(" ")
+    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'rank.xlsx')
+    df.to_excel(writer, sheet_name='Sheet1', index=False)
+    writer.save()
+
