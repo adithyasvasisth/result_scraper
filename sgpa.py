@@ -77,7 +77,7 @@ def gpa(college, year, branch, low, high, sem, cycle):
         gpa_col = 10
     pth = 'ExcelFiles/'
     import xlrd
-    wb = xlrd.open_workbook(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + '.xlsx')
+    wb = xlrd.open_workbook(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + '.xls')
     sheet = wb.sheet_by_name('Sheet1')
     sub, subj = [], []
     with open('gpa.txt', 'w+') as f:
@@ -132,19 +132,26 @@ def gpa(college, year, branch, low, high, sem, cycle):
         for j in range(len(row)):
             ws.write(i, j, row[j])  # Write to cell i, j
 
-    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'GPA.xlsx')
+    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'GPA.xls')
 
 
     f.close()
 
     #Sorts gpa column from gpa.txt and then written to rank.xlsx
     import pandas as pd
-    df = pd.read_csv("gpa.txt", sep=",", header=None)
+    cols = pd.read_csv("gpa.txt").columns
+    r = [0, 1, -3, -2]
+    df = pd.read_csv("gpa.txt", sep=",", usecols=cols[r])
+    df.to_csv("gpa2.txt", sep=",", index=False)
+    df1 = pd.read_csv("gpa2.txt", sep=",", header=None)
+    df1.columns = ['USN', 'Name', 'GPA', 'Percentage']
     try:
-        df = df.sort_values(by=df.columns[-3], ascending=False)
+        df1 = df1.sort_values(by=[df1.columns[2]], ascending=False)
     except AttributeError:
         print(" ")
-    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'rank.xlsx')
-    df.to_excel(writer, sheet_name='Sheet1', index=False)
+
+    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'rank.xls')
+
+    df1.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
 

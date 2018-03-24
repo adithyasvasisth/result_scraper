@@ -185,9 +185,9 @@ for i in range(len(data)):
 
 pth = 'ExcelFiles/'
 if dip == 'N':
-    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + '.xlsx')
+    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + '.xls')
 else:
-    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'DIP.xlsx')
+    book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'DIP.xls')
 f.close()
 
 if semc != '7' and dip != 'Y':
