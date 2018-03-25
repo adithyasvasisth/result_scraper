@@ -1,5 +1,6 @@
 # coding=utf-8
 
+
 def grade(m):
     grade_point = 0
     grade_letter = ''
@@ -134,10 +135,9 @@ def gpa(college, year, branch, low, high, sem, cycle):
 
     book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'GPA.xls')
 
-
     f.close()
 
-    #Sorts gpa column from gpa.txt and then written to rank.xlsx
+    # Sorts gpa column from gpa.txt and then written to rank.xlsx
     import pandas as pd
     cols = pd.read_csv("gpa.txt").columns
     r = [0, 1, -3, -2]
@@ -150,11 +150,7 @@ def gpa(college, year, branch, low, high, sem, cycle):
     except AttributeError:
         print(" ")
 
-    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'rank.xls')
+    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'RANK.xls')
 
     df1.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
-
-#Neen Dodd Soole
-
-
