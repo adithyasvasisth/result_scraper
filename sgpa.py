@@ -137,24 +137,22 @@ def gpa(college, year, branch, low, high, sem, cycle):
 
     f.close()
 
-    #Sorts gpa column from gpa.txt and then written to rank.xlsx
+    #usn,name,gpa and percentage column from gpa.txt is stored into gpar.text and is sorted based on gpa to get rank
     import pandas as pd
     cols = pd.read_csv("gpa.txt").columns
     r = [0, 1, -3, -2]
     df = pd.read_csv("gpa.txt", sep=",", usecols=cols[r])
-    df.to_csv("gpa2.txt", sep=",", index=False)
-    df1 = pd.read_csv("gpa2.txt", sep=",", header=None)
+    df.to_csv("gpar.txt", sep=",", index=False)
+    df1 = pd.read_csv("gpar.txt", sep=",", header=None)
     df1.columns = ['USN', 'Name', 'GPA', 'Percentage']
     try:
         df1 = df1.sort_values(by=[df1.columns[2]], ascending=False)
     except AttributeError:
         print(" ")
-
     writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'rank.xls')
-
     df1.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
 
-#Neen Dodd Soole
+
 
 
