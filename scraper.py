@@ -1,5 +1,5 @@
 # coding=utf-8
-
+import os
 import sys
 import re
 import warnings
@@ -184,6 +184,8 @@ for i in range(len(data)):
             ws.write(i, j, row[j], style)
 
 pth = 'ExcelFiles/'
+if not os.path.exists(pth):
+    os.makedirs(pth)
 if dip == 'N':
     book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + '.xls')
 else:
@@ -196,4 +198,3 @@ if semc != '7' and dip != 'Y':
     from sgpa import gpa
 
     gpa(college, year, branch, low, high, sem, cycle)
-
