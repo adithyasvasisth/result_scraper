@@ -5,7 +5,6 @@ import re
 import warnings
 from robobrowser import RoboBrowser
 
-
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
@@ -20,7 +19,7 @@ ch = 0
 
 # Input for Branch and USNs
 
-college = ["4AI", "1BG", "1CR", "1AM", "1BI"]
+college = ["4AI", "1BG", "1CR", "1AM", "1BI", "1BY"]
 year = input('Enter the year\n')
 branch = input('Please enter the branch\n').upper()
 low = int(input('Enter starting USN\n'))
@@ -161,7 +160,6 @@ with open('test2.txt', 'w+') as f:
 if semc != '7' and dip != 'Y':
     if semc != '1':
         cycle = 'N'
-        from sgparank import gpa2
+    from sgparank import gpa2
 
-        gpa2(year, branch, low, high, sem, cycle)
-
+    gpa2(year, branch, low, high, sem, cycle)

@@ -1,3 +1,7 @@
+# coding=utf-8
+import os
+
+
 def grade(m):
     grade_point = 0
     grade_letter = ''
@@ -74,11 +78,13 @@ def gpa2(year, branch, low, high, sem, cycle):
         marks_code = 41
         gpa_col = 10
     pth = 'ExcelFiles2/'
+    if not os.path.exists(pth):
+        os.makedirs(pth)
     import pandas as pd
     df = pd.read_csv("test2.txt", sep=",")
     sub, subj = [], []
     with open('gpa2.txt', 'w+') as f:
-        #record = ''
+        # record = ''
         # record += df.iloc[0, 0) + ',' + df.iloc[0, 1) + ','
         # print(record, end='\t')
         # f.write(record)
@@ -130,4 +136,8 @@ def gpa2(year, branch, low, high, sem, cycle):
         print(" ")
     writer = p.ExcelWriter(pth + year + branch + str(low) + '-' + str(high - 1) + 'rank2.xls')
     df1.to_excel(writer, sheet_name='Sheet1', index=False)
+    workbook = writer.book
+    worksheet = writer.sheets['Sheet1']
+    worksheet.set_column('A:A', 18)
+    worksheet.set_column('B:B', 18)
     writer.save()

@@ -134,10 +134,9 @@ def gpa(college, year, branch, low, high, sem, cycle):
 
     book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'GPA.xls')
 
-
     f.close()
 
-    #usn,name,gpa and percentage column from gpa.txt is stored into gpar.text and is sorted based on gpa to get rank
+    # usn,name,gpa and percentage column from gpa.txt is stored into gpar.text and is sorted based on gpa to get rank
     import pandas as pd
     cols = pd.read_csv("gpa.txt").columns
     r = [0, 1, -3, -2]
@@ -149,10 +148,6 @@ def gpa(college, year, branch, low, high, sem, cycle):
         df1 = df1.sort_values(by=[df1.columns[2]], ascending=False)
     except AttributeError:
         print(" ")
-    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'rank.xls')
+    writer = pd.ExcelWriter(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'RANK.xls')
     df1.to_excel(writer, sheet_name='Sheet1', index=False)
     writer.save()
-
-
-
-
