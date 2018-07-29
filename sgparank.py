@@ -134,10 +134,6 @@ def gpa2(year, branch, low, high, sem, cycle):
         df1 = df1.sort_values(by=[df1.columns[2]], ascending=False)
     except AttributeError:
         print(" ")
-    writer = p.ExcelWriter(pth + year + branch + str(low) + '-' + str(high - 1) + 'rank2.xls')
+    writer = p.ExcelWriter(pth + year + branch + str(low) + '-' + str(high - 1) + 'RANK.xls')
     df1.to_excel(writer, sheet_name='Sheet1', index=False)
-    workbook = writer.book
-    worksheet = writer.sheets['Sheet1']
-    worksheet.set_column('A:A', 18)
-    worksheet.set_column('B:B', 18)
     writer.save()

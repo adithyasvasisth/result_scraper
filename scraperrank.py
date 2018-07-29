@@ -19,7 +19,7 @@ ch = 0
 
 # Input for Branch and USNs
 
-college = ["4AI", "1BG", "1CR", "1AM", "1BI", "1BY"]
+college = ["1MV", "1CR", "1RN", "1VA", "1VE", "1BY"]
 year = input('Enter the year\n')
 branch = input('Please enter the branch\n').upper()
 low = int(input('Enter starting USN\n'))

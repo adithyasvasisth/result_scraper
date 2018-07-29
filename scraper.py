@@ -24,13 +24,14 @@ college = input("Enter the college code\n").upper()
 year = input('Enter the year\n')
 branch = input('Please enter the branch\n').upper()
 low = int(input('Enter starting USN\n'))
+# increment last USN to aid looping
+high = int(input('Enter last USN\n')) + 1
+semc = input('Enter the Semester\n')
+
 if low >= 400:
     dip = 'Y'
 else:
     dip = 'N'
-# increment last USN to aid looping
-high = int(input('Enter last USN\n')) + 1
-semc = input('Enter the Semester\n')
 
 subcode = 52
 iloop = 8
@@ -40,9 +41,15 @@ if semc == '1':
     if cycle == 'P':
         iloop = 7
         subcode = 46
-if (semc == '3' or '4') and dip == 'Y':
-    iloop = 9
-    subcode = 58
+
+if semc == '3' or semc == '4':
+    if dip == 'Y':
+        iloop = 9
+        subcode = 58
+
+if semc == '8':
+    subcode = 40
+    iloop = 6
 
 # Opens file for storing data
 with open('test.txt', 'w+') as f:
@@ -62,9 +69,9 @@ with open('test.txt', 'w+') as f:
             usn = '1' + college + year + branch + str(u)
 
         # opens the vtu result login page, gets the usn and opens the result page
-        url = "http://results.vtu.ac.in/vitaviresultcbcs/index.php"
-        if semc == '7':
-            url = "http://results.vtu.ac.in/vitaviresultnoncbcs/index.php"
+        url = "http://results.vtu.ac.in/vitaviresultcbcs2018/index.php"
+        if semc == '7' or semc == '8':
+            url = "http://results.vtu.ac.in/vitaviresultnoncbcs18/index.php"
         br = RoboBrowser()
         br.open(url)
         form = br.get_form()
@@ -192,9 +199,9 @@ else:
     book.save(pth + '1' + college + year + branch + str(low) + '-' + str(high - 1) + 'DIP.xls')
 f.close()
 
-if semc != '7' and dip != 'Y':
+if semc != '7' and semc != '8' and dip != 'Y':
     if semc != '1':
         cycle = 'N'
     from sgpa import gpa
 
-    gpa(college, year, branch, low, high, sem, cycle)
+    gpa(college, year, branch, low, high, semc, cycle)
